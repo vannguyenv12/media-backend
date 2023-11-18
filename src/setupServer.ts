@@ -12,11 +12,13 @@ import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 
 import http from 'http';
-import { config } from './config';
-import applicationRoutes from './routes';
+import { config } from '@root/config';
+import applicationRoutes from '@root/routes';
 import { CustomError, IErrorResponse } from '@global/helpers/error-handler';
+import Logger from 'bunyan';
 
 const SERVER_PORT = 5000;
+const log: Logger = config.createLogger('server');
 
 export class MediaServer {
   private app: Application;
@@ -71,7 +73,7 @@ export class MediaServer {
     });
 
     app.use((error: IErrorResponse, req: Request, res: Response, next: NextFunction) => {
-      console.log(error);
+      log.error(error);
       if (error instanceof CustomError) {
         return res.status(error.statusCode).json(error.serializeError());
       }
@@ -86,7 +88,7 @@ export class MediaServer {
       this.startHttpServer(httpServer);
       this.socketIOConnections(socketIO);
     } catch (error) {
-      console.log(error);
+      log.error(error);
     }
   }
 
@@ -107,9 +109,12 @@ export class MediaServer {
   }
 
   private startHttpServer(httpServer: http.Server): void {
-    console.log(`Server has started with process ${process.pid}`);
-    httpServer.listen(SERVER_PORT, () => console.log(`Server running on port ${SERVER_PORT}`));
+    log.info(`Server has started with process ${process.pid}`);
+    httpServer.listen(SERVER_PORT, () => log.info(`Server running on port ${SERVER_PORT}`));
   }
 
-  private socketIOConnections(io: Server): void {}
+  private socketIOConnections(io: Server): void {
+    io;
+    log.info('socketIOConnections');
+  }
 }
