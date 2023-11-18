@@ -1,4 +1,6 @@
 import dotenv from 'dotenv';
+import bunyan from 'bunyan';
+import cloudinary from 'cloudinary';
 
 dotenv.config({});
 
@@ -37,12 +39,24 @@ class Config {
     this.SENDGRID_SENDER = process.env.SENDGRID_SENDER || '';
   }
 
+  public createLogger(name: string): bunyan {
+    return bunyan.createLogger({ name, level: 'debug' });
+  }
+
   public validateConfig(): void {
     for (const [key, value] of Object.entries(this)) {
       if (value === undefined) {
         throw new Error(`Configuration ${key} is undefined`);
       }
     }
+  }
+
+  public cloudinaryConfig() {
+    cloudinary.v2.config({
+      cloud_name: this.CLOUD_NAME,
+      api_key: this.CLOUD_API_KEY,
+      api_secret: this.CLOUD_API_SECRET
+    });
   }
 }
 
