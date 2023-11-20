@@ -6,8 +6,9 @@ import Logger from 'bunyan';
 import { config } from '@root/config';
 import { IAuthJob } from '@auth/interfaces/auth.interface';
 import { IEmailJob } from '@user/interfaces/user.interface';
+import { IPostJobData } from '@post/interfaces/post.interface';
 
-type IBaseJobData = IAuthJob | IEmailJob;
+type IBaseJobData = IAuthJob | IEmailJob | IPostJobData;
 
 let bullAdapters: BullAdapter[] = [];
 
@@ -45,12 +46,12 @@ export abstract class BaseQueue {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected addJob(name: string, data: IBaseJobData): void {
-    // this.queue.add(name, data, { attempts: 3, backoff: { type: 'fixed', delay: 5000 } });
-    this.queue.add(data, { attempts: 3, backoff: { type: 'fixed', delay: 5000 } });
+    this.queue.add(name, data, { attempts: 3, backoff: { type: 'fixed', delay: 5000 } });
+    // this.queue.add(data, { attempts: 3, backoff: { type: 'fixed', delay: 5000 } });
   }
 
   protected processJob(name: string, concurrency: number, callback: Queue.ProcessCallbackFunction<void>): void {
-    // this.queue.process(name, concurrency, callback);
-    this.queue.process(concurrency, callback);
+    this.queue.process(name, concurrency, callback);
+    // this.queue.process(concurrency, callback);
   }
 }
