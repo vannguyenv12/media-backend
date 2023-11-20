@@ -23,7 +23,7 @@ withCredentials: true
 
 {
   "username": "test1",
-  "password": "qwert"
+  "password": "test1234"
 }
 
 ###
