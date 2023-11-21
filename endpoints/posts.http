@@ -11,7 +11,7 @@ withCredentials: true
 # Feelings - like | love | wow | happy | sad | angry
 
 {
-  "post": "Bal post",
+  "post": "First post admin",
   "bgColor": "#4aa1fa",
   "privacy": "Public",
   "gifUrl": "",
