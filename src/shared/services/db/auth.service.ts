@@ -4,6 +4,7 @@ import { Helpers } from '@global/helpers/helpers';
 
 class AuthService {
   public async createAuthUser(data: IAuthDocument): Promise<void> {
+    console.log('hit service');
     await AuthModel.create(data);
   }
 
