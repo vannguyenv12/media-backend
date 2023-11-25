@@ -46,7 +46,7 @@ Accept: application/json
 withCredentials: true
 
 {
-  "email": "test1@gmail.com"
+  "email": "abcd@gmail.com"
 }
 
 ###
