@@ -109,4 +109,33 @@ export class FollowerCache extends BaseCache {
       throw new ServerError('Server Error. Try again');
     }
   }
+
+  public async getFollowersFromCache(key: string): Promise<IFollowerData[]> {
+    try {
+      if (!this.client.isOpen) {
+        await this.client.connect();
+      }
+      const response: string[] = await this.client.LRANGE(key, 0, -1);
+      const list: IFollowerData[] = [];
+      for (const item of response) {
+        const user: IUserDocument = (await userCache.getUserFromCache(item)) as IUserDocument;
+        const data: IFollowerData = {
+          _id: new mongoose.Types.ObjectId(user._id),
+          username: user.username!,
+          avatarColor: user.avatarColor!,
+          postCount: user.postsCount,
+          followersCount: user.followersCount,
+          followingCount: user.followingCount,
+          profilePicture: user.profilePicture,
+          uId: user.uId!,
+          userProfile: user
+        };
+        list.push(data);
+      }
+      return list;
+    } catch (error) {
+      log.error(error);
+      throw new ServerError('Server error. Try again.');
+    }
+  }
 }

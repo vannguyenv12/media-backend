@@ -11,6 +11,7 @@ import { socketIONotificationObject } from '@socket/notification';
 import { notificationTemplate } from '@service/emails/templates/notifications/notification-template';
 import { emailQueue } from '@service/queues/email.queue';
 import { UserCache } from '@service/redis/user.cache';
+import { map } from 'lodash';
 
 const userCache: UserCache = new UserCache();
 
@@ -169,6 +170,19 @@ class FollowerService {
     ]);
 
     return follower;
+  }
+
+  public async getFolloweesIds(userId: string): Promise<string[]> {
+    const followee = await FollowerModel.aggregate([
+      { $match: { followerId: new mongoose.Types.ObjectId(userId) } },
+      {
+        $project: {
+          followeeId: 1,
+          _id: 0
+        }
+      }
+    ]);
+    return map(followee, (result) => result.followeeId.toString());
   }
 }
 
