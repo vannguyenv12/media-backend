@@ -6,6 +6,7 @@ import cookieSession from 'cookie-session';
 import compression from 'compression';
 import HTTP_STATUS from 'http-status-codes';
 import 'express-async-errors';
+import apiStats from 'swagger-stats';
 
 import { Server } from 'socket.io';
 import { createClient } from 'redis';
@@ -39,6 +40,7 @@ export class MediaServer {
     this.routeMiddleware(this.app);
     this.globalErrorHandler(this.app);
     this.startServer(this.app);
+    this.apiMonitoring(this.app);
   }
 
   private securityMiddleware(app: Application): void {
@@ -73,6 +75,14 @@ export class MediaServer {
     applicationRoutes(app);
   }
 
+  private apiMonitoring(app: Application) {
+    app.use(
+      apiStats.getMiddleware({
+        uriPath: '/api-monitoring'
+      })
+    );
+  }
+
   private globalErrorHandler(app: Application): void {
     app.all('*', (req: Request, res: Response) => {
       res.status(HTTP_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` });
@@ -88,6 +98,9 @@ export class MediaServer {
   }
 
   private async startServer(app: Application): Promise<void> {
+    if (!config.JWT_TOKEN) {
+      throw new Error('JWT_TOKEN must be provide');
+    }
     try {
       const httpServer: http.Server = new http.Server(app);
       const socketIO: Server = await this.createSocketIO(httpServer);
@@ -115,6 +128,7 @@ export class MediaServer {
   }
 
   private startHttpServer(httpServer: http.Server): void {
+    log.info(`Worker with process id of ${process.pid} has started...`);
     log.info(`Server has started with process ${process.pid}`);
     httpServer.listen(SERVER_PORT, () => log.info(`Server running on port ${SERVER_PORT}`));
   }

@@ -4,7 +4,6 @@ import { authMiddleware } from '@global/helpers/auth-middleware';
 import { postRoutes } from '@post/routes/postRoutes';
 import { serverAdapter } from '@service/queues/base.queue';
 import { Application } from 'express';
-import { reactionRoutes } from './features/reactions/routes/reactionRoutes';
 import { commentRoutes } from '@comment/routes/commentRoutes';
 import { followerRoutes } from '@follower/routes/followerRoutes';
 import { notificationRoutes } from '@notification/routes/notificationRoutes';
@@ -12,6 +11,7 @@ import { imageRoutes } from '@image/routes/imageRoutes';
 import { chatRoutes } from '@chat/routes/chatRoutes';
 import { userRoutes } from '@user/routes/userRoutes';
 import { healthRoutes } from '@user/routes/healthRoutes';
+import { reactionRoutes } from '@reaction/routes/reactionRoutes';
 
 const BASE_PATH = '/api/v1';
 

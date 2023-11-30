@@ -1,5 +1,5 @@
+import { IReactionDocument } from '@reaction/interfaces/reaction.interface';
 import mongoose, { model, Model, Schema } from 'mongoose';
-import { IReactionDocument } from '../interfaces/reaction.interface';
 
 const reactionSchema: Schema = new Schema({
   postId: { type: mongoose.Schema.Types.ObjectId, ref: 'Post', index: true },
