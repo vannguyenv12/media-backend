@@ -1,0 +1,84 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+###
+POST {{baseUrl}}/{{urlPath}}/chat/message
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "conversationId": "65637d224fb1bac6e7d912f1",
+  "receiverId": "6560c1c4008d6dce4642e78f",
+  "receiverUsername": "Abcd",
+  "receiverAvatarColor": "red",
+  "receiverProfilePicture": "https://res.cloudinary.com/dfapum2fd/image/cloud/v1700839877/6560c1c4008d6dce4642e78f",
+  "body": "Hello, how are you?",
+  "gifUrl": "",
+  "isRead": false,
+  "selectedImage": ""
+}
+
+###
+POST {{baseUrl}}/{{urlPath}}/chat/message/add-chat-users
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "65637d224fb1bac6e7d912f1",
+  "userTwo": "6560c1ce008d6dce4642e796"
+}
+
+###
+POST {{baseUrl}}/{{urlPath}}/chat/message/remove-chat-user
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "userOne": "65637d224fb1bac6e7d912f1",
+  "userTwo": "6560c1ce008d6dce4642e796"
+}
+
+###
+GET  {{baseUrl}}/{{urlPath}}/chat/message/conversation-list
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+GET  {{baseUrl}}/{{urlPath}}/chat/message/user/6560c1c4008d6dce4642e78f
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+DELETE {{baseUrl}}/{{urlPath}}/chat/message/mark-as-deleted/6564ae9b1ed3b2765d29c369/6560c1ce008d6dce4642e796/6560c1c4008d6dce4642e78f/deleteForMe
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+###
+PUT {{baseUrl}}/{{urlPath}}/chat/message/mark-as-read
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "senderId": "6560c1ce008d6dce4642e796",
+  "receiverId": "6560c1c4008d6dce4642e78f"
+}
+
+###
+PUT {{baseUrl}}/{{urlPath}}/chat/message/reaction
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+  "conversationId": "65637d224fb1bac6e7d912f1",
+  "messageId": "6564ae9b1ed3b2765d29c369",
+  "reaction": "sad",
+  "type": "add"
+}
