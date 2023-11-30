@@ -1,7 +1,10 @@
 import express, { Express } from 'express';
-import { MediaServer } from './setupServer';
-import databaseConnection from './setupDatabase';
-import { config } from './config';
+import { MediaServer } from '@root/setupServer';
+import databaseConnection from '@root/setupDatabase';
+import { config } from '@root/config';
+import Logger from 'bunyan';
+
+const log: Logger = config.createLogger('app');
 
 class Application {
   public initialize(): void {
@@ -10,10 +13,50 @@ class Application {
     const app: Express = express();
     const server: MediaServer = new MediaServer(app);
     server.start();
+    Application.handleExit();
   }
 
   private loadConfig(): void {
     config.validateConfig();
+    config.cloudinaryConfig();
+  }
+
+  private static handleExit(): void {
+    process.on('uncaughtException', (error: Error) => {
+      log.error(`There was an uncaught error: ${error}`);
+      Application.shutDownProperly(1);
+    });
+
+    process.on('unhandledRejection', (error: Error) => {
+      log.error(`Unhandled Rejection: ${error}`);
+      Application.shutDownProperly(2);
+    });
+
+    process.on('SIGTERM', () => {
+      log.error('Caught SIGTERM');
+      Application.shutDownProperly(2);
+    });
+
+    process.on('SIGINT', () => {
+      log.error('Caught SIGINT');
+      Application.shutDownProperly(2);
+    });
+
+    process.on('exit', () => {
+      log.error('Exiting');
+    });
+  }
+
+  private static shutDownProperly(exitCode: number): void {
+    Promise.resolve()
+      .then(() => {
+        log.info('Shutdown complete');
+        process.exit(exitCode);
+      })
+      .catch((error) => {
+        log.error(`Error during shutdown: ${error}`);
+        process.exit(1);
+      });
   }
 }
 
