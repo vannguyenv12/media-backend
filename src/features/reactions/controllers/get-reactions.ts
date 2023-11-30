@@ -1,9 +1,9 @@
+import { IReactionDocument } from '@reaction/interfaces/reaction.interface';
 import { reactionService } from '@service/db/reaction.service';
-import { ReactionCache } from '@service/redis/reaction.cache.ts';
+import { ReactionCache } from '@service/redis/reaction.cache';
 import { Request, Response } from 'express';
 import HTTP_STATUS from 'http-status-codes';
 import mongoose from 'mongoose';
-import { IReactionDocument } from '../interfaces/reaction.interface';
 
 const reactionCache: ReactionCache = new ReactionCache();
 
